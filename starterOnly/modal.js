@@ -58,7 +58,6 @@ function validate() {
       break;
       
     case "number":
-      console.log(this.value.length);
       if(isNaN(this.value)) {
         this.parentNode.setAttribute("data-error","Veuillez entrer une valeur numérique");
         this.parentNode.setAttribute("data-error-visible","true");
@@ -120,36 +119,70 @@ function closeModal() {
   modalbg.style.display = "none";
 }
 
-/**JE BLOQUE L'ENVOI DU FORMULAIRE POUR POUVOIR LANCER LA VALIDATION */
+/**JE BLOQUE L'ENVOI DU FORMULAIRE POUR POUVOIR AFFICHER LA CONFIRMATION */
 
-/*
+
 // prevent submit event
 submitButton.addEventListener("click", preventSubmit);
-
 
 // prevent submit function
 function preventSubmit(event) {
   event.preventDefault();
-  validate();
+  confirm();
 }
 
-function validate() {
-  const firstname = document.querySelector("#first").value;
-  const lastname = document.querySelector("#last").value;
-  const email = document.querySelector("#email").value;
-  const birthdate = document.querySelector("#birthdate").value;
-  const quantity = document.querySelector("#quantity").value;
-  const location = document.querySelector(".checkbox-input[name='location']:checked").value;
-  console.log(firstname);
-  console.log(lastname);
-  console.log(email);
-  console.log(birthdate);
-  console.log(quantity);
-  console.log(location);
-  /**IF (CONDITIONS OK) {ENVOYER LE FORMULAIRE VIA JS} */
-  /*if (firstname === "azerty")
+function confirm() {
+  //1-Vérifier que les champs soient remplis
+  //1.1-Les textes (text, email, number)
+
+  let emptyFieldNbr = 0;
+  const fields = document.querySelectorAll(".formData > input");
+  fields.forEach(field => {
+    const type = field.getAttribute("type");
+    switch (type) {
+      case "text":
+        if (field.value.length === 0) {
+          emptyFieldNbr++;
+        }
+      break;
+    
+      case "email":
+        if (field.value.length === 0) {
+          emptyFieldNbr++;
+        }
+      break;
+
+      case "number":
+        if (field.value.length === 0) {
+          emptyFieldNbr++;
+        }
+      break;
+      
+      case "radio":
+        if(locationChecked.length === 0) {
+          emptyFieldNbr++;
+        }
+      break;
+      
+      case "checkbox":
+        if(field.hasAttribute('required') && field.checked === false) {
+          emptyFieldNbr++;
+        }
+      break;
+
+      default:
+        break;
+    }
+  });
+  //2-Trouver le nombre d'erreurs
+  const errorsNbr = document.querySelectorAll(".formData[data-error-visible='true']");
+  /**IF (CONDITIONS OK) {Envoyer la page de confirmation} */
+  if (errorsNbr.length === 0 && emptyFieldNbr === 0)
   {
-    form.submit();
-    console.log('submit');
-  }*/
-//}
+    form.setAttribute("validated", "true");
+  }
+  else {
+    form.setAttribute("validated", "false");
+    console.log("il y a "+errorsNbr.length+" erreur(s) et "+emptyFieldNbr+" champ(s) non rempli(s)");
+  }
+}

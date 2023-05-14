@@ -26,80 +26,76 @@ function validate() {
   const type = this.getAttribute("type");
   //regexp pour l'email
   const emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/
-  //AFFICHAGE DE LA PHRASE DE VALIDATION DES INPUTS
-  //on supprime d'abord la phrase existante :
-  //1-définir l'ID de la phrase
-  const inputID = this.getAttribute("id");
-  const validatorID = inputID+"-validator";
-  //2-la sélectionner :
-  const exValidator = document.getElementById(validatorID);
-  //3-la supprimer si elle existe
-  if (exValidator != null) {
-    document.getElementById(validatorID).remove();
-  }
-  //on crée ensuite la nouvelle :
-  let p = document.createElement('p');
-  this.parentNode.appendChild(p);
-  //on lui ajoute une classe et un id
-  const newValidator = document.querySelector(".formData > p");
-  newValidator.classList.add("validator");
-  newValidator.setAttribute("id",validatorID);
   switch (type) {
     case "text":
       if(this.value.length >= 2) {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       else if(this.value.length === 0) {
-        p.innerHTML = "Ce champ est obligatoire";
+        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       else {
-        p.innerHTML = "Veuillez entrer au moins 2 caractères";
+        this.parentNode.setAttribute("data-error","Veuillez entrer au moins 2 caractères");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       break;
       
     case "email":
       if(emailRegex.test(this.value)) {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       else if(this.value.length === 0) {
-        p.innerHTML = "Ce champ est obligatoire";
+        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       else {
-        p.innerHTML = "Veuillez entrer une adresse e-mail valide";
+        this.parentNode.setAttribute("data-error","Veuillez entrer une adresse e-mail valide");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       break;
       
     case "number":
       console.log(this.value.length);
       if(isNaN(this.value)) {
-        p.innerHTML = "Veuillez entrer une valeur numérique";
+        this.parentNode.setAttribute("data-error","Veuillez entrer une valeur numérique");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       else if(this.value.length === 0) {
-        p.innerHTML = "Ce champ est obligatoire";
+        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       else {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       break;
       
     case "radio":
       if(locationChecked.length === 1) {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       else {
-        p.innerHTML = "Veuillez choisir une option";
+        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       break;
       
     case "checkbox":
       if(this.hasAttribute('required') && this.checked === true) {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       else if(this.hasAttribute('required') && this.checked === false) {
-        p.innerHTML = "Veuillez accepter les termes et conditions";
+        this.parentNode.setAttribute("data-error","Veuillez accepter les termes et conditions");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       else {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       break;
   

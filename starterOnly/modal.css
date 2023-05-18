@@ -35,7 +35,7 @@ form[validated="false"] {
   content: "Fermer";
   position: absolute;
   transform: translateX(-50%);
-  bottom: 0;
+  bottom: 15px;
   left: 50%;
   background: #fe142f;
   display: block;
@@ -344,6 +344,7 @@ input[data-error]::after {
   opacity: 1;
   cursor: pointer;
   transform: scale(0.7);
+  z-index: 2;
 }
 .close:before,
 .close:after {
@@ -371,6 +372,14 @@ input[data-error]::after {
   color: #fff;
   cursor: pointer;
   border: 0;
+  transition: all 300ms ease;
+}
+.submit-error {
+  padding: 12px;
+  background-color: #232323;
+  color: #fe142f;
+  border: 1px solid #fe142f;
+  transition: all 300ms ease;
 }
 /* custom select styles */
 .custom-select {

@@ -27,18 +27,18 @@ function validate() {
   //regexp pour l'email
   const emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/
   switch (type) {
-    case "text":
-      if(this.value.length >= 2) {
-        this.parentNode.setAttribute("data-error","");
-        this.parentNode.setAttribute("data-error-visible","false");
+    case "text": //dans le cas d'un texte
+      if(this.value.length >= 2) { //si au moins 2 caractères
+        this.parentNode.setAttribute("data-error",""); //pas d'erreur
+        this.parentNode.setAttribute("data-error-visible","false"); //pas de message
       }
-      else if(this.value.length === 0) {
-        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
-        this.parentNode.setAttribute("data-error-visible","true");
+      else if(this.value.length === 0) { //si vide
+        this.parentNode.setAttribute("data-error","Ce champ est obligatoire"); //texte du message
+        this.parentNode.setAttribute("data-error-visible","true"); //affichage du message
       }
       else {
         this.parentNode.setAttribute("data-error","Veuillez entrer au moins 2 caractères");
-        this.parentNode.setAttribute("data-error-visible","true");
+        this.parentNode.setAttribute("data-error-visible","true"); //
       }
       break;
       
@@ -53,6 +53,17 @@ function validate() {
       }
       else {
         this.parentNode.setAttribute("data-error","Veuillez entrer une adresse e-mail valide");
+        this.parentNode.setAttribute("data-error-visible","true");
+      }
+      break;
+
+    case "date":
+      if(this.value.length >= 1) {
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
+      }
+      else {
+        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
         this.parentNode.setAttribute("data-error-visible","true");
       }
       break;
@@ -121,7 +132,6 @@ function closeModal() {
 
 /**JE BLOQUE L'ENVOI DU FORMULAIRE POUR POUVOIR AFFICHER LA CONFIRMATION */
 
-
 // prevent submit event
 submitButton.addEventListener("click", preventSubmit);
 
@@ -133,20 +143,25 @@ function preventSubmit(event) {
 
 function confirm() {
   //1-Vérifier que les champs soient remplis
-  //1.1-Les textes (text, email, number)
 
-  let emptyFieldNbr = 0;
-  const fields = document.querySelectorAll(".formData > input");
+  let emptyFieldNbr = 0; //initialiser le compteur des erreurs
+  const fields = document.querySelectorAll(".formData > input"); //sélectionner tous les champs
   fields.forEach(field => {
-    const type = field.getAttribute("type");
+    const type = field.getAttribute("type"); //et pour chacun d'eux, en déterminer le type
     switch (type) {
       case "text":
+        if (field.value.length === 0) {
+          emptyFieldNbr++; //en cas de champ vide, 1 erreur s'incrémente
+        }
+      break;
+    
+      case "email":
         if (field.value.length === 0) {
           emptyFieldNbr++;
         }
       break;
     
-      case "email":
+      case "date":
         if (field.value.length === 0) {
           emptyFieldNbr++;
         }
@@ -160,13 +175,13 @@ function confirm() {
       
       case "radio":
         if(locationChecked.length === 0) {
-          emptyFieldNbr++;
+          emptyFieldNbr++; //si aucun radio n'est choisi, erreur ++
         }
       break;
       
       case "checkbox":
         if(field.hasAttribute('required') && field.checked === false) {
-          emptyFieldNbr++;
+          emptyFieldNbr++; //si un checkbox "required" n'est pas coché --> erreur++
         }
       break;
 
@@ -179,10 +194,30 @@ function confirm() {
   /**IF (CONDITIONS OK) {Envoyer la page de confirmation} */
   if (errorsNbr.length === 0 && emptyFieldNbr === 0)
   {
-    form.setAttribute("validated", "true");
+    form.setAttribute("validated", "true"); //avec validated "true", le formulaire disparaît et la confirmation s'affiche
   }
-  else {
-    form.setAttribute("validated", "false");
-    console.log("il y a "+errorsNbr.length+" erreur(s) et "+emptyFieldNbr+" champ(s) non rempli(s)");
+  else //sinon...
+  {
+    submitButton.classList.add("submit-error");//...prévenir de l'erreur avec une classe css et un message descriptif
+    if (errorsNbr.length >= 1 && emptyFieldNbr >= 1)
+    {
+      form.setAttribute("validated", "false");
+      submitButton.setAttribute("value", "Il y a "+errorsNbr.length+" erreur(s) à corriger et "+emptyFieldNbr+" champ(s) non rempli(s)");
+    }
+    else if (errorsNbr.length >= 1)
+    {
+      form.setAttribute("validated", "false");
+      submitButton.setAttribute("value", "Il y a "+errorsNbr.length+" erreur(s) à corriger");
+    }
+
+    else if (emptyFieldNbr >= 1)
+    {
+      form.setAttribute("validated", "false");
+      submitButton.setAttribute("value", "Il y a "+emptyFieldNbr+" champ(s) non rempli(s)");
+    }
+    setTimeout(() => {
+      submitButton.classList.remove("submit-error");
+      submitButton.setAttribute("value", "C'est parti");
+    }, 2000);
   }
 }

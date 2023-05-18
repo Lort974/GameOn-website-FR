@@ -26,80 +26,75 @@ function validate() {
   const type = this.getAttribute("type");
   //regexp pour l'email
   const emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/
-  //AFFICHAGE DE LA PHRASE DE VALIDATION DES INPUTS
-  //on supprime d'abord la phrase existante :
-  //1-définir l'ID de la phrase
-  const inputID = this.getAttribute("id");
-  const validatorID = inputID+"-validator";
-  //2-la sélectionner :
-  const exValidator = document.getElementById(validatorID);
-  //3-la supprimer si elle existe
-  if (exValidator != null) {
-    document.getElementById(validatorID).remove();
-  }
-  //on crée ensuite la nouvelle :
-  let p = document.createElement('p');
-  this.parentNode.appendChild(p);
-  //on lui ajoute une classe et un id
-  const newValidator = document.querySelector(".formData > p");
-  newValidator.classList.add("validator");
-  newValidator.setAttribute("id",validatorID);
   switch (type) {
     case "text":
       if(this.value.length >= 2) {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       else if(this.value.length === 0) {
-        p.innerHTML = "Ce champ est obligatoire";
+        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       else {
-        p.innerHTML = "Veuillez entrer au moins 2 caractères";
+        this.parentNode.setAttribute("data-error","Veuillez entrer au moins 2 caractères");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       break;
       
     case "email":
       if(emailRegex.test(this.value)) {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       else if(this.value.length === 0) {
-        p.innerHTML = "Ce champ est obligatoire";
+        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       else {
-        p.innerHTML = "Veuillez entrer une adresse e-mail valide";
+        this.parentNode.setAttribute("data-error","Veuillez entrer une adresse e-mail valide");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       break;
       
     case "number":
-      console.log(this.value.length);
       if(isNaN(this.value)) {
-        p.innerHTML = "Veuillez entrer une valeur numérique";
+        this.parentNode.setAttribute("data-error","Veuillez entrer une valeur numérique");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       else if(this.value.length === 0) {
-        p.innerHTML = "Ce champ est obligatoire";
+        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       else {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       break;
       
     case "radio":
       if(locationChecked.length === 1) {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       else {
-        p.innerHTML = "Veuillez choisir une option";
+        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       break;
       
     case "checkbox":
       if(this.hasAttribute('required') && this.checked === true) {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       else if(this.hasAttribute('required') && this.checked === false) {
-        p.innerHTML = "Veuillez accepter les termes et conditions";
+        this.parentNode.setAttribute("data-error","Veuillez accepter les termes et conditions");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       else {
-        document.getElementById(validatorID).remove();
+        this.parentNode.setAttribute("data-error","");
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       break;
   
@@ -124,36 +119,70 @@ function closeModal() {
   modalbg.style.display = "none";
 }
 
-/**JE BLOQUE L'ENVOI DU FORMULAIRE POUR POUVOIR LANCER LA VALIDATION */
+/**JE BLOQUE L'ENVOI DU FORMULAIRE POUR POUVOIR AFFICHER LA CONFIRMATION */
 
-/*
+
 // prevent submit event
 submitButton.addEventListener("click", preventSubmit);
-
 
 // prevent submit function
 function preventSubmit(event) {
   event.preventDefault();
-  validate();
+  confirm();
 }
 
-function validate() {
-  const firstname = document.querySelector("#first").value;
-  const lastname = document.querySelector("#last").value;
-  const email = document.querySelector("#email").value;
-  const birthdate = document.querySelector("#birthdate").value;
-  const quantity = document.querySelector("#quantity").value;
-  const location = document.querySelector(".checkbox-input[name='location']:checked").value;
-  console.log(firstname);
-  console.log(lastname);
-  console.log(email);
-  console.log(birthdate);
-  console.log(quantity);
-  console.log(location);
-  /**IF (CONDITIONS OK) {ENVOYER LE FORMULAIRE VIA JS} */
-  /*if (firstname === "azerty")
+function confirm() {
+  //1-Vérifier que les champs soient remplis
+  //1.1-Les textes (text, email, number)
+
+  let emptyFieldNbr = 0;
+  const fields = document.querySelectorAll(".formData > input");
+  fields.forEach(field => {
+    const type = field.getAttribute("type");
+    switch (type) {
+      case "text":
+        if (field.value.length === 0) {
+          emptyFieldNbr++;
+        }
+      break;
+    
+      case "email":
+        if (field.value.length === 0) {
+          emptyFieldNbr++;
+        }
+      break;
+
+      case "number":
+        if (field.value.length === 0) {
+          emptyFieldNbr++;
+        }
+      break;
+      
+      case "radio":
+        if(locationChecked.length === 0) {
+          emptyFieldNbr++;
+        }
+      break;
+      
+      case "checkbox":
+        if(field.hasAttribute('required') && field.checked === false) {
+          emptyFieldNbr++;
+        }
+      break;
+
+      default:
+        break;
+    }
+  });
+  //2-Trouver le nombre d'erreurs
+  const errorsNbr = document.querySelectorAll(".formData[data-error-visible='true']");
+  /**IF (CONDITIONS OK) {Envoyer la page de confirmation} */
+  if (errorsNbr.length === 0 && emptyFieldNbr === 0)
   {
-    form.submit();
-    console.log('submit');
-  }*/
-//}
+    form.setAttribute("validated", "true");
+  }
+  else {
+    form.setAttribute("validated", "false");
+    console.log("il y a "+errorsNbr.length+" erreur(s) et "+emptyFieldNbr+" champ(s) non rempli(s)");
+  }
+}

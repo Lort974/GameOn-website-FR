@@ -75,6 +75,12 @@ img {
 .header-logo {
     float: left;
 }
+@media screen and (max-width: 340px)
+{
+  .header-logo img {
+    max-width: 246px;
+  }
+}
 .main-navbar {
     float: right;
 }
@@ -106,7 +112,7 @@ img {
   display: none;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1109px) {
   .topnav a {display: none;}
   .topnav a.icon {
     float: right;
@@ -114,7 +120,7 @@ img {
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1109px) {
   .topnav.responsive {position: relative;}
   .topnav.responsive .icon {
     position: absolute;
@@ -135,7 +141,6 @@ img {
   .topnav a.icon {
     float: right;
     display: block;
-    margin-top: -15px;
   }
 } 
 
@@ -469,6 +474,13 @@ input[data-error]::after {
   position: relative;
   text-align: left;
   min-width: 424px;
+  position: relative;
+}
+@media screen and (max-width: 768px)
+{
+  .hero-content {
+    min-width: unset;
+  }
 }
 .hero-content::after {
   content: "";
@@ -484,12 +496,17 @@ input[data-error]::after {
   z-index: 1;
 }
 .hero-headline {
-  font-size: 6rem;
+  font-size: 4.5rem;
   font-weight: normal;
-  white-space: nowrap;
+}
+@media screen and (max-width: 415px)
+{
+  .hero-headline {
+    font-size: 3.2rem;
+  }
 }
 .hero-text {
-  width: 146%;
+  width: 100%;
   font-weight: normal;
   margin-top: 57px;
   padding: 0;
@@ -504,12 +521,18 @@ input[data-error]::after {
 }
 .hero-img {
   grid-column: span 8;
+  position: relative;
+  overflow: hidden;
 }
 .hero-img img {
-  width: 100%;
+  width: auto;
   height: 100%;
   display: block;
   padding: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }
 .copyrights {
   color: #fe142f;
@@ -526,7 +549,7 @@ footer {
   padding-right: 2vw;
   margin: 0 20px;
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 768px) {
   .hero-section {
     display: block;
     box-shadow: unset;
@@ -543,7 +566,6 @@ footer {
     display: none;
   }
   .hero-headline {
-    font-size: 4.5rem;
     white-space: normal;
   }
   .hero-text {
@@ -553,6 +575,10 @@ footer {
   .hero-img img {
     border-radius: 10px;
     margin-top: 40px;
+    width: 100%;
+    height: auto;
+    position: unset;
+    transform: unset;
   }
   .hero-section > .btn-signup {
     display: block;

@@ -22,89 +22,63 @@ dataInput.forEach((input) => input.addEventListener("input", validate));
 
 //validation
 function validate() {
-  //définit le type d'input pour savoir quel test passer
-  const type = this.getAttribute("type");
+  //définit le name d'input pour savoir quel test passer
+  const name = this.getAttribute("name");
   //regexp pour l'email
-  const emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/
-  switch (type) {
-    case "text": //dans le cas d'un texte
-      if(this.value.length >= 2) { //si au moins 2 caractères
-        this.parentNode.setAttribute("data-error",""); //pas d'erreur
+  const emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/
+  const quantityRegex = /[0-9]{1,2}$/
+  switch (name) {
+    case "first": //dans le cas du prénom
+    case "last":  //ou du nom de famille
+      if(this.value.trim().length >= 2) { //si au moins 2 caractères
         this.parentNode.setAttribute("data-error-visible","false"); //pas de message
       }
-      else if(this.value.length === 0) { //si vide
-        this.parentNode.setAttribute("data-error","Ce champ est obligatoire"); //texte du message
-        this.parentNode.setAttribute("data-error-visible","true"); //affichage du message
-      }
       else {
-        this.parentNode.setAttribute("data-error","Veuillez entrer au moins 2 caractères");
-        this.parentNode.setAttribute("data-error-visible","true"); //
+        this.parentNode.setAttribute("data-error-visible","true"); //affichage de l'erreur
       }
       break;
       
     case "email":
       if(emailRegex.test(this.value)) {
-        this.parentNode.setAttribute("data-error","");
         this.parentNode.setAttribute("data-error-visible","false");
       }
-      else if(this.value.length === 0) {
-        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
-        this.parentNode.setAttribute("data-error-visible","true");
-      }
       else {
-        this.parentNode.setAttribute("data-error","Veuillez entrer une adresse e-mail valide");
         this.parentNode.setAttribute("data-error-visible","true");
       }
       break;
 
-    case "date":
+    case "birthdate":
       if(this.value.length >= 1) {
-        this.parentNode.setAttribute("data-error","");
         this.parentNode.setAttribute("data-error-visible","false");
       }
       else {
-        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
         this.parentNode.setAttribute("data-error-visible","true");
       }
       break;
       
-    case "number":
-      if(isNaN(this.value)) {
-        this.parentNode.setAttribute("data-error","Veuillez entrer une valeur numérique");
-        this.parentNode.setAttribute("data-error-visible","true");
-      }
-      else if(this.value.length === 0) {
-        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
-        this.parentNode.setAttribute("data-error-visible","true");
+    case "quantity":
+      if(quantityRegex.test(this.value) && this.value >= 0) {
+        this.parentNode.setAttribute("data-error-visible","false");
       }
       else {
-        this.parentNode.setAttribute("data-error","");
-        this.parentNode.setAttribute("data-error-visible","false");
+        this.parentNode.setAttribute("data-error-visible","true");
       }
       break;
       
-    case "radio":
+    case "location":
       if(locationChecked.length === 1) {
-        this.parentNode.setAttribute("data-error","");
         this.parentNode.setAttribute("data-error-visible","false");
       }
       else {
-        this.parentNode.setAttribute("data-error","Ce champ est obligatoire");
         this.parentNode.setAttribute("data-error-visible","true");
       }
       break;
       
-    case "checkbox":
-      if(this.hasAttribute('required') && this.checked === true) {
-        this.parentNode.setAttribute("data-error","");
-        this.parentNode.setAttribute("data-error-visible","false");
-      }
-      else if(this.hasAttribute('required') && this.checked === false) {
-        this.parentNode.setAttribute("data-error","Veuillez accepter les termes et conditions");
+    case "conditions":
+      if(this.hasAttribute('required') && this.checked === false) {
         this.parentNode.setAttribute("data-error-visible","true");
       }
       else {
-        this.parentNode.setAttribute("data-error","");
         this.parentNode.setAttribute("data-error-visible","false");
       }
       break;
